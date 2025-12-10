@@ -24,7 +24,14 @@ const chapter_ends = [
     1640, // imp
     1657, // meredith
     1668, // luka
-    1674, // nic
+    1674, // nicod
+    1693, // luka-nicod
+    1697, // lukshef
+    1712, // tbw
+    1735, // merco1
+    1748, // merco2
+    1767, // rb
+    1778, // stoic
 ];
 const locationG = 1623;
 /////
