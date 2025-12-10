@@ -16,10 +16,10 @@ const chapter_ends = [
     1490, // 3wff
     1510, // nand
     1527, // xor
-    1537, // ∀, =, ⊤, ⊥
-    1562, // ⊤ + ⊥
-    1592, // hadd
-    1620, // cadd
+    1537, // nor
+    1562, // ∀, =, ⊤, ⊥
+    1592, // ⊤ + ⊥
+    1620, // hadd/cadd
     1626, // min
     1640, // imp
     1657, // meredith
@@ -59,7 +59,6 @@ const interpretPercentage = (block, percentage) => {
     
     if (percentage > 100) percentage = 100;
     else if (percentage < 0) percentage = 0;
-    return percentage;
 }
 
 const getPercentageComplete = (index, block) => {
@@ -68,37 +67,40 @@ const getPercentageComplete = (index, block) => {
     const prevIndex = index <= 0 ? 0 : chapter_ends[index - 1]
     const theoremsToComplete = chapter_ends[index] - (index <= 0 ? 0 : prevIndex)
     const theoremsComplete = currCompletion - prevIndex;
-    let percentage = Math.round(theoremsComplete / theoremsToComplete * 1000) / 10;
+    const percentage = Math.round(theoremsComplete / theoremsToComplete * 1000) / 10;
 
-    percentage = interpretPercentage(block, percentage);
-    if (percentage > 100) {
-        percentage = 100;
+    if (index == 14) {
+        interpretPercentage(block, 0);
+    } else {
+        interpretPercentage(block, percentage);
     }
 
-    let chapter_start = index <= 0 ? 1 : chapter_ends[index - 1] + 1;
-    let chapter_end = chapter_ends[index];
+    const chapter_start = index <= 0 ? 1 : chapter_ends[index - 1] + 1;
+    const chapter_end = chapter_ends[index];
 
     block.innerHTML += " (" + chapter_start + "-" + chapter_end + ")";
-    return percentage;
 }
 
 const setSectPercentageComplete = (num) => {
-    let sectPercent = 0;
-    
     for (let i = part_indexes[num]; i <= part_indexes[num + 1] - 1; i++) {
         const id = `${num}-${i - part_indexes[num]}`;
-        const blockSet = document.getElementById(id);
-        if (blockSet == null) break
-        sectPercent += getPercentageComplete(i, blockSet);
+        const block = document.getElementById(id);
+        if (block == null) break;
+
+        getPercentageComplete(i, block);
     }
+
     const block = document.getElementById(`sect-${num}`);
-    num++;
-    sectPercent = Math.round(sectPercent / num * 10) / 10;
-    interpretPercentage(block, sectPercent);
+    const partStart = num <= 0 ? 0 : chapter_ends[part_indexes[num] - 1];
+    const partEnd   = chapter_ends[part_indexes[num + 1] - 1];
+    const partCount = partEnd - partStart;
+    const amountComplete = locationG - partStart;
+    const partPercentage = Math.round(amountComplete / partCount * 1000) / 10;
+    interpretPercentage(block, partPercentage);
 }
 
 const position = () => {
-    let posOut = locationG;
+    const posOut = locationG;
     if (!(locationG % 100)) posOut += "!";
     document.getElementById("LUP").innerHTML = posOut;
 }
