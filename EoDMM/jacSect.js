@@ -1,40 +1,32 @@
 ///// important
-const chapters = [
-    [
-        2,   // 
-        2,   // wff
-        4,   // ⊢
-        104, // →
-        85,  // ¬
-        188, // ⟷
-        446, // ∧
-        104, // ∨
-        106, // ∧ + ∨
-        18,  // if
-        6,   // ded
-        396, // 3wff
-        25,  // nand
-        17,  // xor
-        26,  // ∀, =, ⊤, ⊥
-        26,  // ⊤ + ⊥
-        29,  // hadd
-        15,  // cadd
-    ],
-    [
-        0,   // i did this to myself
-        6,   // min
-        12,  // imp
-        17,  // meredith
-        11,  // luka
-        6,   // nic
-        
-    ],
+const part_ends = [1, 1620, 1778]
+const part_indexes = [0, 1, 18, 30]
+const chapter_ends = [
+    2,    // infered
+    4,    // wff
+    8,    // ⊢
+    112,  // →
+    205,  // ¬
+    394,  // ⟷
+    846,  // ∧
+    955,  // ∨
+    1061, // ∧ + ∨
+    1081, // if
+    1084, // ded
+    1490, // 3wff
+    1510, // nand
+    1527, // xor
+    1537, // ∀, =, ⊤, ⊥
+    1562, // ⊤ + ⊥
+    1592, // hadd
+    1620, // cadd
+    1626, // min
+    1640, // imp
+    1657, // meredith
+    1668, // luka
+    1674, // nic
 ];
-let chapterLengths = [1599];
-const locationG = 1599;
-let sectAt = 0;
-let sectNumStart = 0;
-let sectIter = 0;
+const locationG = 1623;
 /////
 
 const interpretPercentage = (block, percentage) => {
@@ -63,52 +55,37 @@ const interpretPercentage = (block, percentage) => {
     return percentage;
 }
 
-const setPercentage = (block, list) => {
-    // movement to local
-    let locationSPC = locationG;
-    // start of chapter
-    let amount = 1;
-    // index of chapter
-    let indexSPC = 0;
-    // chapter
-    let i = chapters[sectIter][indexSPC];
-    // chapter of html block
-    const id = block.id.split('-')[1];
+const getPercentageComplete = (index, block) => {
+    const currCompletion = locationG;
 
-    // skip over any previous arrays we've already done
-    for (let l = 0; l < sectIter; l++) {
-        locationSPC -= chapterLengths[l];
-        amount += chapterLengths[l];
-    }
+    const prevIndex = index <= 0 ? 0 : chapter_ends[index - 1]
+    const theoremsToComplete = chapter_ends[index] - (index <= 0 ? 0 : prevIndex)
+    const theoremsComplete = currCompletion - prevIndex;
+    let percentage = Math.round(theoremsComplete / theoremsToComplete * 1000) / 10;
 
-    // find the chapter
-    while (indexSPC < id) {
-        locationSPC -= i;
-        amount += i;
-        indexSPC++;
-        i = chapters[sectIter][indexSPC];
-    }
-    amount += chapters[sectIter][indexSPC];
-
-    // calculate the percentage of completion
-    let percentage = Math.round(locationSPC / chapters[sectIter][indexSPC] * 1000) / 10;
     percentage = interpretPercentage(block, percentage);
-    list.push(percentage);
-    block.innerHTML += " (" + (amount - chapters[sectIter][indexSPC]) + "-" + (amount - 1) + ")";
+    if (percentage > 100) {
+        percentage = 100;
+    }
+
+    let chapter_start = index <= 0 ? 1 : chapter_ends[index - 1] + 1;
+    let chapter_end = chapter_ends[index];
+
+    block.innerHTML += " (" + chapter_start + "-" + chapter_end + ")";
     return percentage;
 }
 
-const sectPercentage = (num) => {
-    let sectPercentList = [];
-    let i;
-    num = num - sectAt;
-    sectPercent = 0;
-    for (i = 1; i <= num; i++) {
-        let blockSet = document.getElementById(`${sectIter}-${i}`);
-        sectPercent += setPercentage(blockSet, sectPercentList);
+const setSectPercentageComplete = (num) => {
+    let sectPercent = 0;
+    
+    for (let i = part_indexes[num]; i <= part_indexes[num + 1] - 1; i++) {
+        const id = `${num}-${i - part_indexes[num]}`;
+        const blockSet = document.getElementById(id);
+        if (blockSet == null) break
+        sectPercent += getPercentageComplete(i, blockSet);
     }
-    const block = document.getElementById(`sect-${sectIter}`);
-    sectIter++;
+    const block = document.getElementById(`sect-${num}`);
+    num++;
     sectPercent = Math.round(sectPercent / num * 10) / 10;
     interpretPercentage(block, sectPercent);
 }

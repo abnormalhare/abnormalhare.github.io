@@ -43,6 +43,11 @@ body {
   display: inline;
 }
 
+.purpleBefore {
+  color: #C0C;
+  display: inline;
+}
+
 .inline {
   display: inline;
 }
