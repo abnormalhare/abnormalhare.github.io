@@ -1,0 +1,26 @@
+.collapsible {
+    border: none;
+    background: none;
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+}
+
+.collapsible::before {
+    content: ">";
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 0.35rem;
+    line-height: 1;
+    transform-origin: center;
+    transition: transform .2s;
+}
+
+.collapsible.active::before {
+    transform: rotate(90deg);
+}
+
+.collapsable-content {
+    display: none;
+    overflow: hidden;
+}

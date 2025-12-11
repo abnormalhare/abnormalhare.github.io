@@ -40,7 +40,7 @@ const interpretPercentage = (block, percentage) => {
     if (percentage >= 100 && block != null) {
         block.className = "greenBefore";
         block.innerHTML = "100%";
-        if (percentage == 100) block.innerHTML = "100%!";
+        if (percentage === 100) block.innerHTML = "100%!";
     } else if (block != null) {
         if (percentage >= 75) {
             block.className = "ygBefore";
@@ -100,3 +100,34 @@ const position = () => {
     if (!(locationG % 100)) posOut += "!";
     document.getElementById("LUP").innerHTML = posOut;
 }
+
+function toggleCollapse() {
+    this.classList.toggle("active");
+    var content = this.nextElementSibling;
+    if (content.style.display === "block") {
+        content.style.display = "none";
+    } else {
+        content.style.display = "block";
+    }
+}
+
+const initializePage = () => {
+    for (var i = 0; i < 3; i++) {
+        setSectPercentageComplete(i);
+    }
+    position();
+
+    var coll = document.getElementsByClassName("collapsible");
+    var i;
+
+    for (i = 0; i < coll.length; i++) {
+        coll[i].addEventListener("click", toggleCollapse);
+
+        if (i == coll.length - 1) {
+            coll[i].nextElementSibling.style.display = "block";
+            coll[i].classList.add("active");
+        }
+    }
+}
+
+initializePage();

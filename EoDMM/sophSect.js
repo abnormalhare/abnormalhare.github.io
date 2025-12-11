@@ -1,5 +1,5 @@
 phrasesSS = [
-    {name: "Complete", color: "rainbow"},
+    {name: "COMPLETE!", color: "rainbow"},
     {name: "Practically done", color: "blue"},
     {name: "Partially done", color: "green"},
     {name: "Important parts done", color: "green"},
@@ -14,3 +14,10 @@ const setColorSS = (block) => {
         if (phrasesSS[i].name == block.innerHTML) block.className = phrasesSS[i].color + "Before"
     }
 }
+
+const initializePageSoph = () => {
+    setColorSS(document.getElementById("SOPH"));
+    setColorSS(document.getElementById("WOM"));
+}
+
+initializePageSoph();
