@@ -69,11 +69,7 @@ const getPercentageComplete = (index, block) => {
     const theoremsComplete = currCompletion - prevIndex;
     const percentage = Math.round(theoremsComplete / theoremsToComplete * 1000) / 10;
 
-    if (index == 14) {
-        interpretPercentage(block, 0);
-    } else {
-        interpretPercentage(block, percentage);
-    }
+    interpretPercentage(block, percentage);
 
     const chapter_start = index <= 0 ? 1 : chapter_ends[index - 1] + 1;
     const chapter_end = chapter_ends[index];
