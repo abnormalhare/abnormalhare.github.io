@@ -37,28 +37,32 @@ const locationG = 1623;
 /////
 
 const interpretPercentage = (block, percentage) => {
-    if (percentage >= 100 && block != null) {
-        block.className = "greenBefore";
-        block.innerHTML = "100%";
-        if (percentage === 100) block.innerHTML = "100%!";
-    } else if (block != null) {
-        if (percentage >= 75) {
-            block.className = "ygBefore";
-        } else if (percentage >= 50) {
-            block.className = "yellowBefore";
-        } else if (percentage >= 25) {
-            block.className = "orangeBefore";
-        } else {
-            block.className = "redBefore";
-            if (percentage < 0) {
-                percentage = 0;
-            }
-        }
-        block.innerHTML = percentage + "%+";
+    if (block == null) return;
+
+    block.style.display = "inline";
+
+    if (percentage < 0) {
+        block.style.color = "#FF0000";
+        block.innerHTML = "0%+";
+    } else if (percentage < 50) {
+        const greenNum = Math.round(percentage / 50 * 255);
+        const green = greenNum.toString(16).padStart(2, '0');
+        
+        block.style.color = "#FF" + green + "00";
+        block.innerHTML = percentage + "%+"
+    } else if (percentage < 100) {
+        const redNum = 255 - Math.round((percentage - 50) / 50 * 255);
+        const red = redNum.toString(16).padStart(2, '0');
+
+        block.style.color = "#" + red + "FF00";
+        block.innerHTML = percentage + "%+"
+    } else if (percentage == 100) {
+        block.style.color = "#00FF00";
+        block.innerHTML = "100%!"
+    } else {
+        block.style.color = "#00FF00";
+        block.innerHTML = "100%"
     }
-    
-    if (percentage > 100) percentage = 100;
-    else if (percentage < 0) percentage = 0;
 }
 
 const getPercentageComplete = (index, block) => {
