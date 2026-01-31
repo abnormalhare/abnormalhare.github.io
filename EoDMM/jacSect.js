@@ -33,7 +33,7 @@ const chapter_ends = [
     1767, // rb
     1778, // stoic
 ];
-const locationG = 1644;
+const locationG = 1655;
 /////
 
 const interpretPercentage = (block, percentage) => {
@@ -136,4 +136,5 @@ const initializePage = () => {
 
 
 initializePage();
+
 
